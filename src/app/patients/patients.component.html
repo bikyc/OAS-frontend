@@ -1,0 +1,32 @@
+
+<div class="input-group">
+    <input type="search" class="form-control rounded" placeholder="Search Doctor" [(ngModel)]="searchPatient" 
+    (ngModelChange)="search()"
+    placeholder="Search By Patient Name" aria-label="Search"
+      aria-describedby="search-addon" />
+</div>
+
+<table class="table">
+    <thead>
+     <th>Patient Id</th>
+        <th>Patient Name</th>
+        <th>Gender</th>
+        <th>Blood Group</th>
+        <th>Mobile </th>
+        <th>Email</th>
+        
+        
+    
+    </thead>
+    <tbody>
+            <tr *ngFor="let patient of patientCollection">
+                    <td>{{patient.id}}</td>
+                    <td>{{patient.patientName}}</td>
+                    <td>{{patient.gender}}</td>
+                    <td>{{patient.bloodGroup}}</td>
+                    <td>{{patient.mobile}}</td>
+                    <td>{{patient.email}}</td>
+                  
+             </tr>
+    </tbody>
+</table> 

@@ -1,0 +1,271 @@
+<!--Widget part-->
+<div>
+    <section class="container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3">
+                  <div class="info-box">
+                    
+            
+                    <div class="info-box-content">
+                      <span class="info-box-text">Todays Appointment</span>
+                      <span class="info-box-number">
+                        {{todaysAppointment}}
+                      </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                  </div>
+                  <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+               
+                <!-- /.col -->
+            
+                <!-- fix for small devices only -->
+                <div class="clearfix hidden-md-up"></div>
+            
+                <div class="col-12 col-sm-6 col-md-3">
+                  <div class="info-box mb-3">
+                               
+                    <div class="info-box-content">
+                      <span class="info-box-text">Total Appointment</span>
+                      <span class="info-box-number">{{totalAppointment}}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                  </div>
+                  <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                  <div class="info-box mb-3">
+                            
+                    <div class="info-box-content">
+                      <span class="info-box-text">Total Patient</span>
+                      <span class="info-box-number">{{totalPatients}}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                  </div>
+                  <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+              </div>
+        </div>
+    </section>
+</div> 
+
+<div class="input-group"> 
+    <input type="text" class="form-control col-md-6 rounded" placeholder="Search By Patient Name or Doctor Name" 
+    aria-label="Search" [(ngModel)]="searchAppointment"   (ngModelChange)="search()"
+      aria-describedby="search-addon" />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+    <button class="btn btn-primary" (click)="getAllDoctors()" data-toggle="modal" 
+data-target="#newAppointmentModal">New Appointment</button>
+</div> 
+
+
+<table class="table">
+    <thead>
+     <th>Date</th>
+  
+        <th>Name</th>
+        <th>Doctor</th>
+        <th>Symptoms</th>
+        <th>Action</th>
+        
+        
+    
+    </thead>
+    <tbody>
+            <tr *ngFor="let appointment of appointmentCollection">
+                    <td>{{ appointment.appointmentDate }}</td>
+                    <td>{{ appointment.patients.patientName }}</td>
+                    <td>{{ appointment.doctors.doctorName }}</td>
+                    <td>{{ appointment.symptoms }}</td>
+                   
+                    <td><button class="btn btn-danger" data-toggle="modal" 
+                        data-target="#editAppointmentModal" (click)="editAppointmentClicked(appointment.id)" >Edit</button>&nbsp;|&nbsp;
+                        <button class="btn btn-primary" data-toggle="modal" (click)="cancelClicked(appointment.id)" 
+                        data-target="#cancleAppointment">Cancel</button></td>
+                
+                  
+             </tr>
+    </tbody>
+</table> 
+
+ <!--New appointment  Modal -->
+ <div class="modal fade" id="newAppointmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">New Appointment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                <label >Patient Name</label>
+                    <select class="form-control"(change)="changePatientsHandler($event)" >
+                        <option>---select patients name-</option>
+                            <option *ngFor="let patient of patientsCollection" value="{{patient.id}}" style="color: black;"> 
+                                {{patient.patientName}}
+                            </option>
+                    </select>
+              </div> 
+              </div>
+              <div class="form-group col-md-12">
+                <label>Appointment Date</label>
+                <input type="date" name="AppointmentDate" [(ngModel)]="appointmentDate" class="form-control" >
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>Appointment Time</label>
+                    <input type="time" name="AppointmentTime" [(ngModel)]="appointmentTime" class="form-control" >
+                    </div>
+   
+              <div class="form-group col-md-12">
+                <label>Select Department</label>
+                <select class="form-control" (change)="changeDepartmentHandler($event)">
+                    <option>---select department-</option>
+                    <option *ngFor="let doctor of doctorsCollection" value="{{doctor.departmentName}}">
+                        {{doctor.departmentName}}
+                    </option>
+                </select>
+                </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                <label >Select Doctor</label>
+                    <select class="form-control" (change)="changeDoctorsHandler($event)">
+                        <option>---select doctors name-</option>
+                        <option *ngFor="let doctor of doctorsCollectionByDepartment" value="{{doctor.id}}">
+                                {{doctor.doctorName}}
+                        </option>
+                    </select>
+              </div>
+              </div> <br>
+   
+              <div class="form-row">
+                <label>Symptoms</label> <br>
+                <textarea cols="25" rows="5" name ="symptoms" [(ngModel)]="newAppointment.symptoms" class="form-control">
+                   
+                </textarea>
+            </div>
+        
+          </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="createAppointment()" data-dismiss="modal">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+<!--/finish new appointment modal-->
+
+
+
+
+<!--Edit appointment  Modal -->
+<div class="modal fade" id="editAppointmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Appointment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                <label >Patient Name</label>
+                <div> {{editAppointment.patientName }}</div>
+                    <select class="form-control"(change)="changePatientsHandler($event)" >
+                        <option>---select patients name-</option>
+                            <option *ngFor="let patient of patientsCollection" value="{{patient.id}}" style="color: black;"> 
+                                {{patient.patientName}}
+                            </option>
+                    </select>
+              </div> 
+              </div>
+              <div class="form-group col-md-12">
+                <label>Appointment Date</label>
+
+                <div>{{ editAppointment.appointmentDate }}</div>
+
+                <input type="date" name="AppointmentDate" [(ngModel)]="appointmentDate" class="form-control" >
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>Appointment Time</label>
+                    <input type="time" name="AppointmentTime" [(ngModel)]="appointmentTime" class="form-control" >
+                    </div>
+   
+              <div class="form-group col-md-12">
+                <label>Select Department</label>
+                <div>{{ editAppointment.departmentName }}</div>
+                <select class="form-control" (change)="changeDepartmentHandler($event)">
+                    <option>---select department-</option>
+                    <option *ngFor="let doctor of doctorsCollection" value="{{doctor.departmentName}}">
+                        {{doctor.departmentName}}
+                    </option>
+                </select>
+                </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                <label >Select Doctor</label>
+                <div>{{ editAppointment.doctorName }}</div>
+                    <select class="form-control" (change)="changeDoctorsHandler($event)">
+                        <option>---select doctors name-</option>
+                        <option *ngFor="let doctor of doctorsCollectionByDepartment" value="{{doctor.id}}">
+                                {{doctor.doctorName}}
+                        </option>
+                    </select>
+              </div>
+              </div> <br>
+   
+              <div class="form-row">
+                <label>Symptoms</label> <br>
+                <textarea cols="25" rows="5" name ="symptoms" [(ngModel)]="symptoms" class="form-control">
+                        <!-- {{ symptoms }} -->
+                </textarea>
+            </div>
+        
+          </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="editAppointments(appointmentId)" data-dismiss="modal">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+<!--/finish edit appointment modal-->
+
+
+<!--Cancle appointment modal-->
+  <div class="modal" id="cancleAppointment" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cancel</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Do you really want to cancel appointment?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="deleteAppointment(appointmentId)" data-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>

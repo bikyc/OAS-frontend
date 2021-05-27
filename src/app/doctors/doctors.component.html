@@ -1,0 +1,33 @@
+
+<div class="input-group">
+    <input type="search" class="form-control rounded" placeholder="Search Doctor" [(ngModel)]="searchDoctor" 
+    (ngModelChange)="search()" aria-label="Search"
+      aria-describedby="search-addon" />
+</div>
+
+
+<table class="table">
+    <thead>
+     <th>Doctor Id</th>
+        <th>Doctor Name</th>
+        <th>Gender</th>
+        <th>Education</th>
+        <th>Department Name</th>
+        <th>Experience</th>
+        <th>Mobile Number</th>
+    
+    </thead>
+    <tbody>
+            <tr *ngFor="let doctor of doctorCollection">
+                    <td>{{doctor.id }}</td>
+                    <td>{{doctor.doctorName}}</td>
+                    <td>{{doctor.gender}}</td>
+                    <td>{{doctor.education}}</td>
+                    <td>{{doctor.departmentName}}</td>
+                    <td>{{doctor.experience}}</td>
+                    <td>{{doctor.mobile}}</td>                   
+                
+                    
+            </tr>
+    </tbody>
+</table> 
